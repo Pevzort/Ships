@@ -1,0 +1,117 @@
+﻿1 Задача:
+
+В файле корабли:
+- название
+- позиция
+- тип: пассажирский, грузовой, боевой
+
+Пользователь задает регион поиска(прямоугольник на плоскости)
+
+Подсчитать по выбору пользователя, сколько судов определенного типа и вывести их на экран 
+
+2. Сущности:
+	Корабль	(Ship),
+	Список кораблей(ShipList),
+	Регион поиска (Rect),
+	Тип корабля (ShipType),
+	Менеджер (Main)
+
+3. Прецеденты: 
+	-Загрузка данных задачи.
+	-Выборка судов заданного типа.
+	-Подсчет кол-ва судов в выборке.
+	-Вывод выборки на экран.
+
+4.
+	-Загрузка данных задачи.
+		 Участники: ShipList, Rect, ShipType, Manager
+		 Обязанности: 
+			ShipList:
+				-Загрузка кораблей из файла с указанным именем ShipList Load(string filename);
+			Rect:
+				-Считывания прямоугольника с клавиатуры: Rect ReadFromKbd;
+			ShipType:
+				-Обработка типа корабля считанного с клавиатуры: ShipType ToShipType(string type);
+			Manager: 
+				-Создание обьектов.
+				-Запуск считывания для ShipList.
+				-Запуск считывания для Rect.
+				-Запуск считывания типа корабля с клавиатуры.
+	
+	-Выборка судов заданного типа.
+		 Участники: ShipList, Rect, ShipType, Manager. 
+		 Обязанности: 
+			ShipList:
+				-формироание выборки по заданному Rect и ShipType: ShipList Select(Rect rect, ShiptType shiptype);
+			Ship:
+				-Проверка на попадание в регион: bool isInRect(Rect rect);
+				-Возврат типа: shipType Type {get {...} };
+			ShipType:
+				-проверка на совпадения типа корабля и заданного типа: bool isEquals(ShipType shipType);
+			Rect:
+				-проверка принадлежности точки: bool Inside(Point position);
+			Manager:
+				-Формирование запроса
+
+	- Подсчет кол-ва судов в выборке.
+		Участники: ShipList. 
+		Обязанности: 
+			ShipList:
+				-количество элементов в списке: int Count {get {...}};
+
+	- Вывод выборки на экран
+		Участники: ShipList, Ship, Manager. 
+		Обязанности: 
+			ShipList:
+				-вывод на экран списка кораблей. void Print(); 
+			Ship:
+				-вывод на экран корабля. void Print();
+			Manager:
+				-запуск команды вывода результата на экран: void PrintResult(ShipList list);
+
+5. Описание классов:
+
+ class Ship
+{
+    public Ship (string name, Point position, string type) {}
+    public bool isInRect(Rect rect) {}
+    public void Print() {}
+    public ShipType Type { get { return _type; } }
+
+    private string _name;
+    private Point _position;
+    private ShipType _type;
+}
+class ShipType
+{
+    public enum ShipTypes {}
+
+    static public ShipType ToShipType(string type) {}
+    public bool isEquals(ShipType shipType) {}
+
+    public ShipTypes Type { get { return _shipType; } }
+
+    private void SetShipType(ShipTypes type) {}
+    private ShipTypes _shipType;
+}
+class ShipList
+{
+    static public ShipList Load(string filename) {}
+    public void Add(Ship ship) {}
+
+    public ShipList Select(Rect rect, ShipType shipType) {}
+    public void Print() {}
+
+    public int Count { get { return _shipList.Count; } }
+
+    private List<Ship> _shipList = new List<Ship>();
+}
+
+class Rect
+{
+    static public Rect ReadFromKbd() {}
+    public bool Inside(Point point) {}
+
+    private Point _leftTop;
+    private Point _rightBottom;
+}
